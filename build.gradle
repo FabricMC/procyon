@@ -29,7 +29,8 @@ ext.getProcyonVersion = { ->
     return fallbackVersion
 }
 
-final def procyonVersion = getProcyonVersion()
+def ENV = System.getenv()
+final def procyonVersion = getProcyonVersion() + "." + (ENV.BUILD_NUMBER ?: "local")
 
 allprojects {
     apply plugin: 'java'
@@ -60,7 +61,7 @@ rootProject.uploadArchives.enabled = false
 
 subprojects {
     apply plugin: 'maven'
-    apply plugin: 'signing'
+	apply plugin: 'maven-publish'
 
     archivesBaseName = 'procyon-' + it.name.split("\\.")[1].toLowerCase()
 
@@ -81,89 +82,43 @@ subprojects {
         from sourceSets.main.allSource
     }
 
+
     if (project.name != "Procyon.Decompiler") {
         javadoc {
             options.encoding = 'UTF-8'
         }
+		
+		publishing {
+			publications {
+				maven(MavenPublication) {
+					groupId project.group
+					artifactId project.archivesBaseName
+					version project.version
 
-        artifacts {
-            archives jar
-            archives javadocJar
-            archives sourcesJar
-        }
+					from components.java
+					
+					artifact javadocJar {
+						classifier "javadoc"
+					}
 
-        signing {
-            sign configurations.archives
-        }
+					artifact sourcesJar {
+						classifier "sources"
+					}
+				}
+			}
+			repositories {
+				maven {
+					url "http://mavenupload.modmuss50.me/"
+					if (project.hasProperty('mavenPass')) {
+						credentials {
+							username 'buildslave'
+							password project.getProperty('mavenPass')
+						}
+					}
+				}
+			}
+		}
 
-        uploadArchives {
-            repositories.mavenDeployer {
-                beforeDeployment { MavenDeployment deployment ->
-                    signing.signPom(deployment)
-                }
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                    authentication(userName: project.properties.get("sonatypeUsername"), password: project.properties.get("sonatypePassword"))
-                }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-                    authentication(userName: project.properties.get("sonatypeUsername"), password: project.properties.get("sonatypePassword"))
-                }
-
-                pom {
-                    groupId = project.group
-                    version = project.version
-                    artifactId = project.archivesBaseName
-
-                    project {
-                        name project.archivesBaseName
-                        packaging 'jar'
-                        description 'Procyon'
-                        url 'https://bitbucket.org/mstrobel/procyon'
-
-                        scm {
-                            url 'https://bitbucket.org/mstrobel/procyon'
-                            connection 'scm:hg:https://hg@bitbucket.org/mstrobel/procyon'
-                            developerConnection 'scm:hg:https://mstrobel@bitbucket.org/mstrobel/procyon'
-                        }
-
-                        issueManagement {
-                            system 'jira'
-                            url 'https://bitbucket.org/mstrobel/procyon/issues'
-                        }
-
-                        licenses {
-                            license {
-                                name 'The Apache Software License, Version 2.0'
-                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                                distribution 'repo'
-                            }
-                        }
-
-                        developers {
-                            developer {
-                                id 'mstrobel'
-                                name 'Mike Strobel'
-                                roles {
-                                    role 'owner'
-                                    role 'packager'
-                                    role 'developer'
-                                }
-                            }
-                        }
-
-                        dependencies {
-                            dependency {
-                                groupId 'junit'
-                                artifactId 'junit'
-                                version '4.11'
-                                scope 'test'
-//                                optional = true
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
