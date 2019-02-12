@@ -29,7 +29,8 @@ ext.getProcyonVersion = { ->
     return fallbackVersion
 }
 
-final def procyonVersion = getProcyonVersion()
+def ENV = System.getenv()
+final def procyonVersion = getProcyonVersion() + "." + (ENV.BUILD_NUMBER ?: "local")
 
 allprojects {
     apply plugin: 'java'
@@ -59,7 +60,6 @@ rootProject.tasks.each { it.enabled = false }
 
 subprojects {
     apply plugin: 'maven'
-    apply plugin: 'signing'
 
     archivesBaseName = 'procyon-' + it.name.split("\\.")[1].toLowerCase()
 
@@ -91,22 +91,13 @@ subprojects {
             archives sourcesJar
         }
 
-        signing {
-            sign configurations.archives
-        }
-
         uploadArchives {
             repositories.mavenDeployer {
-                beforeDeployment { MavenDeployment deployment ->
-                    signing.signPom(deployment)
-                }
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                    authentication(userName: project.properties.get("sonatypeUsername"), password: project.properties.get("sonatypePassword"))
-                }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-                    authentication(userName: project.properties.get("sonatypeUsername"), password: project.properties.get("sonatypePassword"))
-                }
+				if (project.hasProperty('mavenPass')) {
+					repository(url: 'http://mavenupload.modmuss50.me/') {
+						authentication(userName: 'buildslave', password: project.getProperty('mavenPass'))
+					}
+				}
 
                 pom {
                     groupId = project.group
