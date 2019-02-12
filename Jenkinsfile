@@ -4,7 +4,7 @@ pipeline {
 
       stage ('Build') {
          when {
-            branch 'master'
+            branch 'hg_master'
          }
          steps {
             sh "rm -rf build/"
