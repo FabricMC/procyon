@@ -9,7 +9,7 @@ pipeline {
          steps {
             sh "rm -rf build/"
             sh "chmod +x gradlew"
-            sh "./gradlew build uploadArchives -x test --refresh-dependencies --stacktrace"
+            sh "./gradlew build publish -x test --refresh-dependencies --stacktrace"
          }
       }
    }
