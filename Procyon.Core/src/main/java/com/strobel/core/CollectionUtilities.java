@@ -20,6 +20,7 @@ import com.strobel.util.EmptyArrayCache;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author Mike Strobel
@@ -261,6 +262,15 @@ public final class CollectionUtilities {
         }
 
         throw Error.sequenceHasNoElements();
+    }
+
+    public static <T> T firstOfType(final Iterable<Object> collection, Class<T> type) {
+        for (Object o : VerifyArgument.notNull(collection, "collection")){
+            if (type.isInstance(o)){
+                return type.cast(o);
+            }
+        }
+        return null;
     }
 
     public static <T> T singleOrDefault(final Iterable<T> collection) {
@@ -694,6 +704,34 @@ public final class CollectionUtilities {
 
         return new Buffer<>(elementType, sequence.iterator()).toArray();
     }
+
+    public static <T, R> List<R> map(List<T> list, Function<T, R> function) {
+        List<R> result = new ArrayList<>(list.size());
+        for (T t : list) {
+            result.add(function.apply(t));
+        }
+        return result;
+    }
+
+    public static <T> String collectionToString(Collection<T> collection, Function<T, String> toString) {
+        return collectionToString(collection, toString, ", ");
+    }
+
+    public static <T> String collectionToString(Collection<T> collection, Function<T, String> toString, String separator) {
+        StringBuilder s = new StringBuilder();
+
+        boolean first = true;
+        for (T t : collection) {
+            if (!first) {
+                s.append(separator);
+            }
+            first = false;
+            s.append(toString.apply(t));
+        }
+
+        return s.toString();
+    }
+
 
     private final static class Buffer<E> {
         final Class<E> elementType;

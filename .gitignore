@@ -1,0 +1,16 @@
+Procyon.CompilerTools/build/
+Procyon.Core/build/
+Procyon.Decompiler/build/
+Procyon.Expressions/build/
+Procyon.Reflection/build/
+Procyon.CompilerTools/out/
+Procyon.Core/out/
+Procyon.Decompiler/out/
+Procyon.Expressions/out/
+Procyon.Reflection/out/
+out/
+.idea/
+.gradle/
+*.iml
+build/
+cache.txt

@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.strobel.core.CollectionUtilities.firstOfType;
 import static com.strobel.core.CollectionUtilities.firstOrDefault;
 import static com.strobel.core.CollectionUtilities.indexOf;
 
@@ -362,9 +363,13 @@ public final class TypeUtilities {
                     return null;
                 }
 
-                final MethodReference method = (MethodReference) callSite.getBootstrapArguments().get(0);
+                MethodReference method = firstOfType(callSite.getBootstrapArguments(), MethodReference.class);
+                if (method == null){
+                    MethodHandle methodHandle = firstOfType(callSite.getBootstrapArguments(), MethodHandle.class);
+                    method = methodHandle != null ? methodHandle.getMethod() : null;
+                }
 
-                return method.getDeclaringType();
+                return method != null? method.getDeclaringType() : null;
             }
             else {
                 final MethodDeclaration method = firstOrDefault(parent.getAncestors(MethodDeclaration.class));
