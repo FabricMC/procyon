@@ -363,13 +363,17 @@ public final class TypeUtilities {
                     return null;
                 }
 
-                MethodReference method = firstOfType(callSite.getBootstrapArguments(), MethodReference.class);
-                if (method == null){
-                    MethodHandle methodHandle = firstOfType(callSite.getBootstrapArguments(), MethodHandle.class);
-                    method = methodHandle != null ? methodHandle.getMethod() : null;
+                for (Object argument : callSite.getBootstrapArguments()) {
+                    if (argument instanceof MethodReference) {
+                        return ((MethodReference) argument).getDeclaringType();
+                    }
+
+                    if (argument instanceof MethodHandle) {
+                        return ((MethodHandle) argument).getMethod().getDeclaringType();
+                    }
                 }
 
-                return method != null? method.getDeclaringType() : null;
+                return null;
             }
             else {
                 final MethodDeclaration method = firstOrDefault(parent.getAncestors(MethodDeclaration.class));
