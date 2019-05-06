@@ -23,7 +23,7 @@ public class TypeInferer {
 
         @Override
         public boolean isPrimitive() {
-            return true;
+            return false;
         }
 
         @Override
@@ -45,7 +45,7 @@ public class TypeInferer {
 
         @Override
         public boolean isPrimitive() {
-            return true;
+            return false;
         }
 
         @Override
@@ -248,7 +248,7 @@ public class TypeInferer {
                     int interfaceParameterCount = interfaceMethod.getParameters().size();
                     int invokedynamicArgumentCount = expression.getArguments().size();
                     if (invokedynamicArgumentCount + interfaceParameterCount != argumentTypes.size()) {
-                        throw new IllegalStateException("Lambda parameter counts don't match");
+                        //throw new IllegalStateException("Lambda parameter counts don't match");
                     }
 
                     // Match captured variables with invokedynamic arguments
@@ -505,7 +505,7 @@ public class TypeInferer {
 
             case MonitorEnter:
             case MonitorExit: {
-                constraints.addExtends(expression.getArguments(), BuiltinTypes.Object);
+                constraints.addExtends(expression.getArguments().get(0), BuiltinTypes.Object);
                 break;
             }
 

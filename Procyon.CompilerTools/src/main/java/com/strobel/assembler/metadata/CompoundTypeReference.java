@@ -206,4 +206,9 @@ public final class CompoundTypeReference extends TypeReference {
 
         return BuiltinTypes.Object.appendErasedSignature(sb);
     }
+
+    @Override
+    public TypeDefinition resolve() {
+        return _interfaces.get(0).resolve();
+    }
 }

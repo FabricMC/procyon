@@ -31,6 +31,10 @@ public final class GenericConstraintFinder extends DefaultTypeVisitor<TypeRefere
             return false;
         }
 
+        if (u.getElementType() == null) {
+            return false; // TODO: how does this happen...?
+        }
+
         if (u.isGenericParameter()) {
             return false;
         }
@@ -148,7 +152,7 @@ public final class GenericConstraintFinder extends DefaultTypeVisitor<TypeRefere
             boolean changed = false;
             final List<? extends TypeReference> tArgs = t instanceof IGenericInstance ? ((IGenericInstance) t).getTypeArguments() : t.getGenericParameters();
             final List<? extends TypeReference> uArgs = u instanceof IGenericInstance ? ((IGenericInstance) u).getTypeArguments() : u.getGenericParameters();
-            for (int i = 0; i < tArgs.size(); i++) {
+            if (tArgs.size() == uArgs.size()) for (int i = 0; i < tArgs.size(); i++) {
                 TypeReference tArg = tArgs.get(i);
                 TypeReference uArg = uArgs.get(i);
                 changed |= constraints.addEquality(tArg, uArg);
@@ -159,7 +163,7 @@ public final class GenericConstraintFinder extends DefaultTypeVisitor<TypeRefere
                 boolean changed = false;
                 final List<? extends TypeReference> tArgs = t instanceof IGenericInstance ? ((IGenericInstance) t).getTypeArguments() : t.getGenericParameters();
                 final List<? extends TypeReference> uArgs = u instanceof IGenericInstance ? ((IGenericInstance) u).getTypeArguments() : u.getGenericParameters();
-                for (int i = 0; i < tArgs.size(); i++) {
+                if (tArgs.size() == uArgs.size()) for (int i = 0; i < tArgs.size(); i++) {
                     TypeReference tArg = tArgs.get(i);
                     TypeReference uArg = uArgs.get(i);
                     changed |= reduceCompatibilityConstraint(tArg, uArg);
@@ -213,7 +217,8 @@ public final class GenericConstraintFinder extends DefaultTypeVisitor<TypeRefere
             } else if (t.isUnbounded() && u.isUnbounded()) { // Always true
                 return false;
             } else {
-                throw new IllegalStateException("Type " + t + " cannot be compatible with " + u);
+                //throw new IllegalStateException("Type " + t + " cannot be compatible with " + u);
+                return false; // cast required
             }
         } else if (u instanceof WildcardType) {
             if (u.hasExtendsBound()) {

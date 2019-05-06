@@ -1812,9 +1812,7 @@ public final class JavaOutputVisitor implements IAstVisitor<Void, Void> {
             formatter.writeLiteral(node.getLiteralValue());
         }
         else if (node.getValue() instanceof Number) {
-            final long longValue = ((Number) node.getValue()).longValue();
-
-            if (longValue != -1L && isBitwiseContext(node.getParent(), node)) {
+            if ((node.getValue() instanceof Integer || node.getValue() instanceof Short || node.getValue() instanceof Long) && isBitwiseContext(node.getParent(), node)) {
                 formatter.writeLiteral(
                     String.format(
                         node.getValue() instanceof Long ? "0x%1$XL" : "0x%1$X",

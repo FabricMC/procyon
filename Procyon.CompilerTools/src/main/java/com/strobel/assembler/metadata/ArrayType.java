@@ -114,12 +114,6 @@ public final class ArrayType extends TypeReference {
 
     @Override
     public final TypeDefinition resolve() {
-        final TypeDefinition resolvedElementType = _elementType.resolve();
-
-        if (resolvedElementType != null) {
-            return resolvedElementType;
-        }
-
-        return super.resolve();
+        return CommonTypeReferences.Object.resolve();
     }
 }

@@ -18,7 +18,7 @@ public class InferenceSettings {
     public static final boolean S_PRIMITIVE_RULE = true;
 
     // Type variable assignment options
-    public static final boolean A_LOWER_BOUND = false;
+    public static final boolean A_LOWER_BOUND = true;
     public static final boolean A_PREFER_LOWER_BOUND = false;
     public static final boolean A_TRANSITIVITY = false;
 }
