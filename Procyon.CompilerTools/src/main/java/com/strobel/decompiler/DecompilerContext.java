@@ -34,6 +34,7 @@ public final class DecompilerContext extends UserDataStoreBase {
     private BooleanBox _isCanceled;
     private TypeDefinition _currentType;
     private MethodDefinition _currentMethod;
+    private boolean _isInsideTypeBody;
 
     public DecompilerContext() {
     }
@@ -64,6 +65,14 @@ public final class DecompilerContext extends UserDataStoreBase {
 
     public void setCurrentType(final TypeDefinition currentType) {
         _currentType = currentType;
+    }
+
+    public boolean isInsideTypeBody() {
+        return _isInsideTypeBody;
+    }
+
+    public void setInsideTypeBody(boolean isInsideTypeBody) {
+        _isInsideTypeBody = isInsideTypeBody;
     }
 
     public MethodDefinition getCurrentMethod() {

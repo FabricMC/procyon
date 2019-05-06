@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.strobel.core.CollectionUtilities.firstOfType;
 import static com.strobel.core.CollectionUtilities.firstOrDefault;
 import static com.strobel.core.CollectionUtilities.indexOf;
 

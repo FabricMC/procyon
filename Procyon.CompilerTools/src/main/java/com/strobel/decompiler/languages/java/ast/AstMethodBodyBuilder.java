@@ -840,7 +840,7 @@ public class AstMethodBodyBuilder {
                 return new ThrowStatement(arg1);
 
             case CheckCast:
-                return new CastExpression(operandType, arg1);
+                return arg1;
 
             case InstanceOf:
                 return new InstanceOfExpression( byteCode.getOffset(), arg1, operandType);
@@ -1315,12 +1315,13 @@ public class AstMethodBodyBuilder {
             final TypeReference aType = resolvedArgument.getType();
             final TypeReference pType = p.getParameterType();
 
-            if (isCastRequired(pType, aType, true)) {
-                arguments.set(
-                    i,
-                    new CastExpression(_astBuilder.convertType(pType, options), argument)
-                );
-            }
+            // TODO: completely broken... necessary for disambiguating methods but breaks generics completely
+//            if (isCastRequired(pType, aType, true)) {
+//                arguments.set(
+//                    i,
+//                    new CastExpression(_astBuilder.convertType(pType, options), argument)
+//                );
+//            }
         }
 
         int first = 0, last = parameterCount - 1;

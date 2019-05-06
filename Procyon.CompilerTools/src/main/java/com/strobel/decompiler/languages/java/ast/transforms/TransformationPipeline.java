@@ -34,8 +34,6 @@ public final class TransformationPipeline {
             new EnumSwitchRewriterTransform(context),
             new EclipseEnumSwitchRewriterTransform(context),
             new AssertStatementTransform(context),
-            new RemoveImplicitBoxingTransform(context),
-            new RemoveRedundantCastsTransform(context),
             new ConvertLoopsTransform(context),
             new BreakTargetRelocation(context),
             new LabelCleanupTransform(context),
@@ -55,9 +53,10 @@ public final class TransformationPipeline {
             new FlattenSwitchBlocksTransform(context),
             new IntroduceInitializersTransform(context),
             new MarkReferencedSyntheticsTransform(context),
-            new RemoveRedundantCastsTransform(context), // (again due to inlined synthetic accessors)
-            new RewriteBoxingCastsTransform(context),
-            new InsertNecessaryConversionsTransform(context),
+//            new InsertNecessaryConversionsTransform(context),
+            new RemoveImplicitBoxingTransform(context),
+//            new RemoveRedundantCastsTransform(context),
+//            new RewriteBoxingCastsTransform(context),
             new IntroduceStringConcatenationTransform(context),
             new SimplifyAssignmentsTransform(context), // (again due to inlined synthetic accessors, string concatenation)
             new InlineEscapingAssignmentsTransform(context),
