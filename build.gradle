@@ -4,7 +4,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'idea'
 
-archivesBaseName = 'procyon'
+archivesBaseName = 'procyon-fabric'
 
 ext.getProcyonVersion = { ->
     final def fallbackVersion = "1.0-SNAPSHOT";
@@ -41,7 +41,7 @@ allprojects {
 
     version procyonVersion
 
-    group 'org.bitbucket.mstrobel'
+    group 'net.fabricmc'
     sourceCompatibility = 1.8    // JDK version
 
     repositories {
@@ -62,7 +62,7 @@ subprojects {
     apply plugin: 'maven'
 	apply plugin: 'maven-publish'
 
-    archivesBaseName = 'procyon-' + it.name.split("\\.")[1].toLowerCase()
+    archivesBaseName = 'procyon-fabric-' + it.name.split("\\.")[1].toLowerCase()
 
     jar {
         metaInf {
