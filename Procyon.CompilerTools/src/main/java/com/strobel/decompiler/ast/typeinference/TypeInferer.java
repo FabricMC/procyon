@@ -80,7 +80,9 @@ public class TypeInferer {
             }
 
             for (Variable variable : equivalenceSet.variables) {
-                variable.setType(equivalenceSet.solution == null ? BuiltinTypes.Void : equivalenceSet.solution);
+                if (variable.getType() == null || !InferenceSettings.I_USE_DEBUG_INFO) {
+                    variable.setType(equivalenceSet.solution == null ? BuiltinTypes.Void : equivalenceSet.solution);
+                }
             }
         }
         print((System.nanoTime() - startTime) / 1000000d + " ms");
