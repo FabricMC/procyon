@@ -65,7 +65,7 @@ public final class GenericConstraintFinder extends DefaultTypeVisitor<TypeRefere
         if (mode == Mode.EQUALS) {
             if (!(u instanceof WildcardType)) {
                 //throw new IllegalStateException("Wildcard type " + t + " can't equal non-wildcard type " + u);
-                return false; // Casts break everything
+                return false; // Cast required
             }
 
             if (t.hasExtendsBound() && u.hasExtendsBound()) {
@@ -73,7 +73,8 @@ public final class GenericConstraintFinder extends DefaultTypeVisitor<TypeRefere
             } else if (t.hasSuperBound() && u.hasSuperBound()) {
                 return constraints.addEquality(t.getSuperBound(), u.getSuperBound());
             } else {
-                throw new IllegalStateException("Wildcards " + t + " and " + u + " can't be equal");
+                //throw new IllegalStateException("Wildcards " + t + " and " + u + " can't be equal");
+                return false; // Cast required
             }
         } else if (mode == Mode.EXTENDS) {
             if (t.hasSuperBound()) {
