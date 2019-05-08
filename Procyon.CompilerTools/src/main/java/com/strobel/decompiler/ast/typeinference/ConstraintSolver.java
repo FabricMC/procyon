@@ -4,14 +4,22 @@ import com.strobel.assembler.metadata.GenericParameter;
 import com.strobel.assembler.metadata.MetadataHelper;
 import com.strobel.assembler.metadata.TypeReference;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ConstraintSolver {
+    private final long timeLimit = System.currentTimeMillis() + 7000;
     private Map<Object, EquivalenceSet> equivalences = new LinkedHashMap<>();
     private Map<TypeReference, TypeReference> genericSubstitutions = new HashMap<>();
     private Set<TypeReference> types = new HashSet<>();
 
     public boolean addExtends(Object e1, Object e2) { // TODO: allow e1 and e2 to be constraint sets
+        checkTime();
+
         e1 = processObject(e1);
         e2 = processObject(e2);
         if (e1.equals(e2)) return false;
@@ -24,6 +32,8 @@ public class ConstraintSolver {
     }
 
     public boolean addEquality(Object e1, Object e2) { // TODO: allow e1 and e2 to be constraint sets
+        checkTime();
+
         e1 = processObject(e1);
         e2 = processObject(e2);
         if (e1.equals(e2)) return false;
@@ -61,6 +71,12 @@ public class ConstraintSolver {
         }
 
         return true;
+    }
+
+    private void checkTime() {
+        if (System.currentTimeMillis() > timeLimit) {
+            throw new IllegalStateException("Took too long");
+        }
     }
 
     private EquivalenceSet mergeSets(EquivalenceSet into, EquivalenceSet from) {
@@ -207,11 +223,7 @@ public class ConstraintSolver {
             print("***Finding constraints***");
             changedThisPass = false;
             for (EquivalenceSet type : getEquivalenceSets()) {
-                try {
-                    changedThisPass |= type.findConstraints(this);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
+                changedThisPass |= type.findConstraints(this);
             }
             changed |= changedThisPass;
         } while (changedThisPass);
@@ -225,11 +237,7 @@ public class ConstraintSolver {
             print("***Solving unique***");
             changedThisPass = false;
             for (EquivalenceSet type : getEquivalenceSets()) {
-                try {
-                    changedThisPass |= type.solveUnique(this);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
+                changedThisPass |= type.solveUnique(this);
             }
             changed |= changedThisPass;
         } while (changedThisPass);
@@ -243,11 +251,7 @@ public class ConstraintSolver {
             print("***Solving multiple***");
             changedThisPass = false;
             for (EquivalenceSet type : getEquivalenceSets()) {
-                try {
-                    changedThisPass |= type.solveMultiple(this);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
+                changedThisPass |= type.solveMultiple(this);
             }
             changed |= changedThisPass;
 

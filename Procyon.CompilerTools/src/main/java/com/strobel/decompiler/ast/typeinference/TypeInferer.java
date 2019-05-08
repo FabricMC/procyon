@@ -23,7 +23,7 @@ public class TypeInferer {
 
         @Override
         public boolean isPrimitive() {
-            return true;
+            return false;
         }
 
         @Override
@@ -45,7 +45,7 @@ public class TypeInferer {
 
         @Override
         public boolean isPrimitive() {
-            return true;
+            return false;
         }
 
         @Override
@@ -80,7 +80,9 @@ public class TypeInferer {
             }
 
             for (Variable variable : equivalenceSet.variables) {
-                variable.setType(equivalenceSet.solution == null ? BuiltinTypes.Void : equivalenceSet.solution);
+                if (variable.getType() == null || !InferenceSettings.I_USE_DEBUG_INFO) {
+                    variable.setType(equivalenceSet.solution == null ? BuiltinTypes.Void : equivalenceSet.solution);
+                }
             }
         }
         print((System.nanoTime() - startTime) / 1000000d + " ms");
@@ -248,7 +250,7 @@ public class TypeInferer {
                     int interfaceParameterCount = interfaceMethod.getParameters().size();
                     int invokedynamicArgumentCount = expression.getArguments().size();
                     if (invokedynamicArgumentCount + interfaceParameterCount != argumentTypes.size()) {
-                        throw new IllegalStateException("Lambda parameter counts don't match");
+                        //throw new IllegalStateException("Lambda parameter counts don't match");
                     }
 
                     // Match captured variables with invokedynamic arguments
@@ -505,7 +507,7 @@ public class TypeInferer {
 
             case MonitorEnter:
             case MonitorExit: {
-                constraints.addExtends(expression.getArguments(), BuiltinTypes.Object);
+                constraints.addExtends(expression.getArguments().get(0), BuiltinTypes.Object);
                 break;
             }
 

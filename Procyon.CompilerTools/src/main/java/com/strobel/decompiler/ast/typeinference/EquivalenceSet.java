@@ -5,7 +5,11 @@ import com.strobel.core.CollectionUtilities;
 import com.strobel.decompiler.ast.Expression;
 import com.strobel.decompiler.ast.Variable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class EquivalenceSet {
     public Set<TypeReference> types = new LinkedHashSet<>();
@@ -474,8 +478,6 @@ public class EquivalenceSet {
                         type = (TypeReference) ((IGenericInstance) type).getGenericDefinition();
                     } else if (type instanceof GenericParameter) {
                         type = new GenericParameter("ElementType");
-                    } else {
-                        throw new IllegalStateException();
                     }
 
                     while (order-- > 0) {
@@ -494,7 +496,12 @@ public class EquivalenceSet {
                     TypeReference common = MetadataHelper.findCommonSubtype(greatestLowerBound, superType);
 
                     if (common == null) {
-                        throw new IllegalStateException("Can't extend both " + greatestLowerBound + " and " + superType); // TODO: casts
+                        if (!InferenceSettings.C_CASTS_ENABLED) {
+                            throw new IllegalStateException("Can't extend both " + greatestLowerBound + " and " + superType);
+                        }
+
+                        print("Cast required, " + greatestLowerBound + " and " + superType + " have no common subtype. Equivalence set: " + this);
+                        common = andType(greatestLowerBound, superType);
                     }
 
                     greatestLowerBound = common;

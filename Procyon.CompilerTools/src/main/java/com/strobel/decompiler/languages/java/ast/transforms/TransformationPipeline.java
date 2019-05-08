@@ -53,10 +53,10 @@ public final class TransformationPipeline {
             new FlattenSwitchBlocksTransform(context),
             new IntroduceInitializersTransform(context),
             new MarkReferencedSyntheticsTransform(context),
-//            new InsertNecessaryConversionsTransform(context),
+            new InsertNecessaryConversionsTransform(context),
             new RemoveImplicitBoxingTransform(context),
-//            new RemoveRedundantCastsTransform(context),
-//            new RewriteBoxingCastsTransform(context),
+            new RemoveRedundantCastsTransform(context),
+            new RewriteBoxingCastsTransform(context),
             new IntroduceStringConcatenationTransform(context),
             new SimplifyAssignmentsTransform(context), // (again due to inlined synthetic accessors, string concatenation)
             new InlineEscapingAssignmentsTransform(context),

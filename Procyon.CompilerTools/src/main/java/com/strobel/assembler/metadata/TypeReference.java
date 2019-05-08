@@ -268,7 +268,7 @@ public abstract class TypeReference extends MemberReference implements IGenericP
             final TypeReference underlyingType = getUnderlyingType();
 
             if (underlyingType != this) {
-                return underlyingType.getRawType();
+                return underlyingType.isGenericType() ? underlyingType.getRawType() : underlyingType;
             }
 
             return new RawType(this);

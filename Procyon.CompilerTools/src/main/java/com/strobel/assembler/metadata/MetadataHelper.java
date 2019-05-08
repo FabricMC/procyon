@@ -2136,7 +2136,7 @@ public final class MetadataHelper {
                 return getSuperType(bt);
             }
 
-            return t;
+            return CommonTypeReferences.Object;
         }
 
         @Override
