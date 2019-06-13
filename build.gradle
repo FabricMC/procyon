@@ -29,6 +29,11 @@ ext.getProcyonVersion = { ->
     return fallbackVersion
 }
 
+// fabric says otherwise
+ext.getProcyonVersion = { ->
+    return "0.5.35"
+}
+
 def ENV = System.getenv()
 final def procyonVersion = getProcyonVersion() + "." + (ENV.BUILD_NUMBER ?: "local")
 
