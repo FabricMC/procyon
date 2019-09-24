@@ -2270,7 +2270,7 @@ public final class JavaOutputVisitor implements IAstVisitor<Void, Void> {
             writeKeyword(node.getMethodName());
         }
         else {
-            writeIdentifier(node.getMethodName());
+            writeIdentifier(node.getMethodNameToken(), node.getMethodName());
         }
 
         endNode(node);
